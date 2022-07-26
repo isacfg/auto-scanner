@@ -13,7 +13,7 @@ def open_scanner():
         return False
 
 def scan_dialog():
-    time.sleep(3)
+    time.sleep(4)
 
     scan_dialog = pag.locateCenterOnScreen('imgs\scan_dialog.png')
 
@@ -27,7 +27,7 @@ def scan_dialog():
         return False
 
 def scan_settings():
-    time.sleep(3)
+    time.sleep(4)
 
     auto_scan_option = pag.locateCenterOnScreen('imgs/auto_scan_option.png')
     scan_button = pag.locateCenterOnScreen('imgs\scan_option.png')
@@ -44,7 +44,7 @@ def scan_settings():
         print('sucessfully found scan button')
 
 def is_scanning():
-    time.sleep(3)
+    time.sleep(4)
     is_save_available = False
     save_button_grey = pag.locateCenterOnScreen('imgs\save_not_available.png')
     save_button_green = pag.locateCenterOnScreen('imgs\save_available.png')
@@ -63,7 +63,7 @@ def is_scanning():
 
             preparing = pag.locateCenterOnScreen('imgs\preparing.png')
 
-            time.sleep(2)
+            time.sleep(4)
             is_save_available = False
         
         else:
@@ -73,22 +73,23 @@ def is_scanning():
  
     if is_save_available:
         save_button = pag.locateCenterOnScreen('imgs\save_button.png')
+        # 930 617
 
         if save_button:
             print('sucessfully found save button')
         else:
             print('could not find save button')
 
-        time.sleep(1)
-        pag.moveTo(save_button)
+        time.sleep(2)
+        pag.moveTo(930, 617)
         pag.click()
         print('waiting for preparation to complete')
 
-        time.sleep(6)
+        time.sleep(8)
  
 
     print('scanning with the correct resolution...')
-    time.sleep(60 + 18)
+    time.sleep(60 + 25)
     # print('scanning complete')
 
 def done_scanning():

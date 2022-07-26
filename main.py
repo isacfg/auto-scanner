@@ -3,6 +3,14 @@ from time import sleep
 from scan_app import *
 from edit import *
 
+# Todo
+# Auto crop with border detection
+# Compress images
+# Add a progress bar
+# Add sound notification when ready to scan
+# Edit images
+
+
 def main():
     open_scanner()
 
