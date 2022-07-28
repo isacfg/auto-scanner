@@ -3,120 +3,116 @@ import time
 
 def open_scanner():
    
-    scanner_icon = pag.locateCenterOnScreen('imgs\open_scanner.png')
+    scanner_icon = pag.locateCenterOnScreen('imgs\scanner_icon.png', confidence=0.8)
     if scanner_icon:
         pag.moveTo(scanner_icon)
         pag.doubleClick()
-        print('sucessfully found printer icon')
-    else:
-        print('could not find printer icon')
-        return False
+        print('sucessfully found scanner icon')
 
 def scan_dialog():
-    time.sleep(4)
+    scanner_dialog = pag.locateCenterOnScreen('imgs\scanner_dialog.png')
 
-    scan_dialog = pag.locateCenterOnScreen('imgs\scan_dialog.png')
+    while scanner_dialog == None:
+        print('trying to find scanner dialog')
+        time.sleep(1)
+        scanner_dialog = pag.locateCenterOnScreen('imgs\scanner_dialog.png', confidence=0.8)
 
-    if scan_dialog:
-        pag.moveTo(scan_dialog)
+
+    if scanner_dialog:
+        pag.moveTo(scanner_dialog)
         pag.click()
-        print('sucessfully found scan dialog')
+        print('sucessfully found scanner dialog')
 
-    else:
-        print('could not find scan dialog')
-        return False
 
 def scan_settings():
-    time.sleep(4)
+    auto_scan_option = pag.locateCenterOnScreen('imgs/auto_scanner.png')
 
-    auto_scan_option = pag.locateCenterOnScreen('imgs/auto_scan_option.png')
-    scan_button = pag.locateCenterOnScreen('imgs\scan_option.png')
+    while auto_scan_option == None:
+        print('trying to find auto scan option')
+        time.sleep(1)
+        auto_scan_option = pag.locateCenterOnScreen('imgs/auto_scanner.png', confidence=0.8)
 
     if auto_scan_option:
         pag.moveTo(auto_scan_option)
         pag.click()
         print('sucessfully found auto scan option')
 
-    if scan_button:
-        # time.sleep(1)
-        pag.moveTo(scan_button)
-        pag.click()
-        print('sucessfully found scan button')
+        scan_button = pag.locateCenterOnScreen('imgs\scan_button.png', confidence=0.7)
 
-def is_scanning():
-    time.sleep(4)
-    is_save_available = False
-    save_button_grey = pag.locateCenterOnScreen('imgs\save_not_available.png')
-    save_button_green = pag.locateCenterOnScreen('imgs\save_available.png')
-    save_button = pag.locateCenterOnScreen('imgs\save_button.png')
-    preparing = pag.locateCenterOnScreen('imgs\preparing.png')
-    mouse_default = pag.locateCenterOnScreen('imgs\mouse_default.png')
-
-    # rescaning = pag.locateCenterOnScreen('imgs/rescaning.png')
-
-    pag.moveTo(mouse_default)
-
-    while not is_save_available:
-   
-        if preparing:
-            print('preparing...')
-
-            preparing = pag.locateCenterOnScreen('imgs\preparing.png')
-
-            time.sleep(4)
-            is_save_available = False
+        while scan_button == None:
+            print('trying to find scan button')
+            time.sleep(1)
+            scan_button = pag.locateCenterOnScreen('imgs\scan_button.png', confidence=0.7)
         
-        else:
-            print('preparation complete')
-            is_save_available = True
+        if scan_button:
+            pag.moveTo(scan_button)
+            pag.click()
+            print('sucessfully found scan button')
+    
+def is_scanning():
+    time.sleep(1)
+    preparing_scan = pag.locateCenterOnScreen('imgs\preparing_scan.png', confidence=0.6)
 
- 
-    if is_save_available:
-        save_button = pag.locateCenterOnScreen('imgs\save_button.png')
-        # 930 617
+    while preparing_scan:
+        print('preparing scan')
+        time.sleep(1)
+        preparing_scan = pag.locateCenterOnScreen('imgs\preparing_scan.png', confidence=0.6)
 
-        if save_button:
-            print('sucessfully found save button')
-        else:
-            print('could not find save button')
+        if preparing_scan == None:
+            print('done preparing scan')
+            break
 
-        time.sleep(2)
-        pag.moveTo(930, 617)
+    time.sleep(3)
+    default_mouse_pos = pag.locateCenterOnScreen('imgs\default_mouse.png', confidence=0.8)
+    pag.moveTo(default_mouse_pos)
+
+    save_button = pag.locateCenterOnScreen('imgs\save_button.png', confidence=0.8)
+    if save_button:
+        pag.moveTo(save_button)
         pag.click()
-        print('waiting for preparation to complete')
+        print('sucessfully found save button')
+    else:
+        print('could not find save button')
 
-        time.sleep(8)
- 
+    preparing_scan_2 = pag.locateCenterOnScreen('imgs\preparing_scan.png', confidence=0.6)
+    scanning = pag.locateCenterOnScreen('imgs\scanning.png', confidence=0.6)
 
-    print('scanning with the correct resolution...')
-    time.sleep(60 + 25)
-    # print('scanning complete')
+    while preparing_scan_2 or scanning:
+        print('scanning')
+        time.sleep(2)
+        preparing_scan_2 = pag.locateCenterOnScreen('imgs\preparing_scan.png', confidence=0.6)
+        scanning = pag.locateCenterOnScreen('imgs\scanning.png', confidence=0.6)
+
+        if preparing_scan_2 == None and scanning == None:
+            print('done scanning')
+            break
+
+    time.sleep(3)
+
 
 def done_scanning():
-    done_img = pag.locateCenterOnScreen('imgs\done.png')
+    done_img = pag.locateCenterOnScreen('imgs\done.png', confidence=0.8)
+
+    while done_img == None:
+        print('trying to find done img')
+        time.sleep(1)
+        done_img = pag.locateCenterOnScreen('imgs\done.png', confidence=0.6)
+
     if done_img:
         pag.moveTo(done_img)
         pag.click()
-        print('sucessfully found done button')
-    else:
-        print('could not find done button')
+        print('sucessfully found done img')
 
 
 def back_to_cmd():
-    tskbar_cmd = True
-    cmd_img = pag.locateCenterOnScreen('imgs\cmd.png')
+    cmd_img = pag.locateCenterOnScreen('imgs\cmd.png', confidence=0.6)
 
-    if tskbar_cmd:
-        pag.moveTo(805, 741)
+    while cmd_img == None:
+        print('trying to find cmd img')
+        time.sleep(1)
+        cmd_img = pag.locateCenterOnScreen('imgs\cmd.png', confidence=0.5)
+
+    if cmd_img:
+        pag.moveTo(cmd_img)
         pag.click()
-        print('sucessfully found cmd in taskbar')
-
-        if cmd_img:
-            pag.moveTo(cmd_img)
-            pag.click()
-            print('sucessfully found cmd window')
-        else:
-            print('could not find cmd window')      
-
-    else:
-        print('could not find cmd in taskbar')
+        print('sucessfully found cmd img')
