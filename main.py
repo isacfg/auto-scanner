@@ -13,9 +13,11 @@ from clear import *
 def main():
     open_scanner()
 
-    # should_loop = input('Number of scans: ')
-    clear_dir('results/before_crop')
-    clear_dir('results/after_crop', True)
+    should_clear = input('Do you want to clear the images? (y/n) ')
+    if should_clear == 'y' or should_clear == 'Y':
+        clear_dir('results/before_crop', True)
+        clear_dir('results/after_crop', True)
+
 
     counter = 1
     while True:
@@ -38,7 +40,11 @@ def main():
             break
 
 
-    crop_imgs()
+    should_crop = input('Crop images? (y/n): ')
+    if should_crop == 'y' or should_crop == 'Y':
+        crop_imgs()
+    else: 
+        print('Not cropping')
         
 
 main()
