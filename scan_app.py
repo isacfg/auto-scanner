@@ -80,7 +80,7 @@ def is_scanning():
 
     while preparing_scan_2 or scanning:
         print('scanning')
-        time.sleep(2)
+        time.sleep(5)
         preparing_scan_2 = pag.locateCenterOnScreen('imgs\preparing_scan.png', confidence=0.6)
         scanning = pag.locateCenterOnScreen('imgs\scanning.png', confidence=0.6)
 
