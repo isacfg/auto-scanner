@@ -13,13 +13,13 @@ from clear import *
 def main():
     create_dir('results/before_crop')
     create_dir('results/bkp')
-    open_scanner()
 
     should_clear = input('Do you want to clear the images? (y/n) ')
     if should_clear == 'y' or should_clear == 'Y':
         clear_dir('results/before_crop', True)
         clear_dir('results/after_crop', True)
 
+    open_scanner()
 
     counter = 1
     while True:
