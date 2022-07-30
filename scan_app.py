@@ -1,6 +1,7 @@
 import pyautogui as pag
 import time
 
+
 def open_scanner():
    
     scanner_icon = pag.locateCenterOnScreen('imgs\scanner_icon.png', confidence=0.8)

@@ -11,6 +11,8 @@ from clear import *
 
 
 def main():
+    create_dir('results/before_crop')
+    create_dir('results/bkp')
     open_scanner()
 
     should_clear = input('Do you want to clear the images? (y/n) ')
@@ -44,7 +46,8 @@ def main():
     if should_crop == 'y' or should_crop == 'Y':
         crop_imgs()
     else: 
-        print('Not cropping')
+        print('exiting...')
+        sleep(1)
         
 
 main()

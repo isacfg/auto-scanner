@@ -1,10 +1,18 @@
+import os
 from PIL import Image
 from os import remove, walk
 from time import sleep
 
 
+def create_dir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+        print('Directory "' + path + '" created')
+    else:
+        print('Directory "' + path + '" already exists')
 
 def crop_imgs():
+    create_dir('results/after_crop')
 
     for _,__,img_files in walk('results/before_crop'):
         for img_file in img_files:
@@ -32,3 +40,4 @@ def crop_imgs():
 
         sleep(2)
 
+crop_imgs()
