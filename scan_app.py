@@ -1,5 +1,8 @@
 import pyautogui as pag
 import time
+from notifypy import Notify
+
+nfc = Notify()
 
 
 def open_scanner():
@@ -80,11 +83,18 @@ def is_scanning():
 
     while preparing_scan_2 or scanning:
         print('scanning')
-        time.sleep(5)
+        time.sleep(2)
         preparing_scan_2 = pag.locateCenterOnScreen('imgs\preparing_scan.png', confidence=0.6)
         scanning = pag.locateCenterOnScreen('imgs\scanning.png', confidence=0.6)
 
         if preparing_scan_2 == None and scanning == None:
+            nfc.title = 'Finished Scanning'
+            nfc.message = 'proceed to next step'
+            nfc.application_name = 'AutoScan'
+            nfc.icon = 'icon_48.png'
+            nfc.audio = 'apple_sucess_sfx.wav'
+            nfc.send()
+
             print('done scanning')
             break
 
