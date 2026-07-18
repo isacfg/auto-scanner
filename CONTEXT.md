@@ -77,3 +77,17 @@ _Avoid_: Latest asset
 **Superseded Asset**:
 An Asset retained as history after another Asset becomes current in the same role.
 _Avoid_: Deleted asset
+
+## Export
+
+**Export Package**:
+A self-contained Finder folder produced by one Export, containing selected renditions and a Manifest that preserves their Library identities and provenance.
+_Avoid_: Export folder, archive
+
+**Export Rendition**:
+The specific Asset selected to represent a Side in an Export Package: the current Master or, for the Front, one explicitly selected completed Restoration.
+_Avoid_: Latest version, best version
+
+**Manifest**:
+The versioned machine-readable inventory that maps every exported image to its Photograph, Side, Asset, role at export time, and derivation lineage.
+_Avoid_: Index, metadata file
