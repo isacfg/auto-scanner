@@ -6,6 +6,8 @@ Digitize loose printed photographs quickly on iPhone without requiring a capture
 
 The original capture is immutable. Cropped masters and restored images are derived versions and never overwrite it.
 
+The initial MVP is for personal use and private distribution. Public App Store distribution, multi-user accounts, and a commercial service backend are not requirements for this effort.
+
 ## iPhone capture session
 
 The app automatically captures a photograph after confirming:
@@ -54,6 +56,8 @@ Each photograph can contain:
 ### iPhone
 
 - automatic capture without a capture button;
+- supported capture with the iPhone stationary above a surface as the recommended mode;
+- handheld capture as a fully supported MVP mode;
 - automatic edge detection, crop, rotation, and perspective correction;
 - focus, exposure, glare, shadow, obstruction, and stability quality gates;
 - duplicate-capture prevention;
@@ -84,6 +88,8 @@ Each photograph can contain:
 
 ## Explicitly out of scope
 
+- public App Store distribution for the initial MVP;
+- multi-user accounts or a commercial service backend;
 - album-page scanning;
 - multiple photographs captured simultaneously;
 - face recognition or grouping;
