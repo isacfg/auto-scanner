@@ -11,7 +11,7 @@ The user's collection of Photographs, their Sides, Assets, and processing state 
 A continuous period in which a user digitizes multiple Photographs on the iPhone.
 
 **In-progress Photograph**:
-A Photograph whose Front capture has begun but which has not yet been completed or discarded. Its Back Capture requirement is fixed when Front capture begins.
+A durable, recoverable Photograph whose Front capture has begun but which has not yet been completed or discarded. Its identity and Back Capture requirement are fixed when Front capture begins; it is not yet part of the completed Library.
 
 **Manual Exception Capture**:
 An explicit capture made available after automatic capture has waited too long. It accepts quality warnings but still requires a detectable Photograph, an available camera, and no capture already in progress.
