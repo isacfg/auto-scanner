@@ -1,52 +1,49 @@
-# Local Markdown Issue Tracker
+# GitHub Issue Tracker
 
-This repository uses Markdown files under `docs/wayfinder/` for Wayfinder maps and tickets.
+This repository uses GitHub Issues as the canonical tracker.
 
 ## Wayfinding operations
 
-### Storage
+The canonical Wayfinder map is the open issue labelled `wayfinder:map`. Its tickets are native GitHub sub-issues with exactly one of these labels:
 
-Each effort has one directory:
+- `wayfinder:research`
+- `wayfinder:prototype`
+- `wayfinder:grilling`
+- `wayfinder:task`
 
-```text
-docs/wayfinder/<effort>/
-├── map.md
-└── tickets/
-    └── <stable-id>-<short-name>.md
-```
-
-Maps and tickets use YAML frontmatter. A map has `kind: map` and `labels: [wayfinder:map]`. A ticket has `kind: ticket`, a single `wayfinder:<type>` label, a `parent` path, and a stable `id`.
-
-### Claiming
-
-An open ticket is unclaimed when `assignee: null`. Claim it before work by setting `assignee` to the developer's GitHub login or stable agent name. Never claim more than one ticket in a Wayfinder session.
-
-### Dependencies and frontier
-
-Because Markdown has no native dependency relationship, tickets use `blocked_by`, an array of stable ticket ids. A ticket is unblocked when every referenced ticket has `status: closed`.
-
-The frontier consists of tickets that are:
-
-- children of the map;
-- `status: open`;
-- `assignee: null`;
-- unblocked.
-
-List ticket metadata with:
+### Load the map
 
 ```sh
-rg -n '^(id|title|status|assignee|blocked_by):' docs/wayfinder/<effort>/tickets
+gh issue list --label wayfinder:map --state open
+gh issue view <map> --json number,title,body,state,subIssues,url
 ```
 
-Resolve ids by searching the exact id:
+### Claim and frontier
+
+An open sub-issue with no assignee is unclaimed. Native `blocked by` relationships define whether it is unblocked. Claim a ticket before reading beyond its question or doing work:
 
 ```sh
-rg -l '^id: <ticket-id>$' docs/wayfinder/<effort>/tickets
+gh issue edit <ticket> --add-assignee @me
 ```
 
-### Resolution
+The frontier is the ordered set of open, unassigned sub-issues whose native blockers are all closed. Never resolve more than one ticket per Wayfinder session.
 
-Record the answer under `## Resolution`, set `status: closed`, and append one linked one-line gist to the parent map's `## Decisions so far`. Do not duplicate the detailed resolution in the map.
+### Create and wire tickets
 
-When a resolution exposes a new precise question, add a ticket first and then wire its `blocked_by` ids. When fog becomes precise, remove it from `## Not yet specified` and represent it only in its new ticket.
+Create every ticket first, then add native dependency relationships in a second pass:
+
+```sh
+gh issue create --parent <map> --label wayfinder:<type> --title "<name>" --body $'## Question\n\n<question>'
+gh issue edit <ticket> --add-blocked-by <blocking-ticket>
+```
+
+### Resolve
+
+1. Commit and push any linked research or prototype asset.
+2. Post the detailed answer as a resolution comment on the ticket.
+3. Close the ticket.
+4. Append one linked one-line gist to the map's `## Decisions so far`.
+5. Create newly precise tickets and wire dependencies; remove graduated fog from the map.
+
+Refer to every issue by its linked title in user-facing text, never by a bare number.
 
