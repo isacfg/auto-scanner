@@ -58,6 +58,18 @@ _Avoid_: Edited original
 An immutable AI-produced derivative of one Front Master. Multiple Restorations may coexist without replacing the Master or one another.
 _Avoid_: Restored master
 
+**Restoration Attempt**:
+An immutable record of one confirmed request to produce a Restoration from one specific Front Master. It remains in history whether it completes, fails, is cancelled, or has an uncertain submission outcome; retrying creates another Attempt.
+_Avoid_: Job, retry
+
+**Restoration Batch**:
+A user-confirmed group of Restoration Attempts created from one manual selection and one Cost Estimate. Attempts in the Batch proceed independently and may finish differently.
+_Avoid_: Bulk restoration
+
+**Cost Estimate**:
+A time-bounded, non-binding projection of Restoration cost in a named currency, recorded per selected Front Master and as a Batch total before confirmation.
+_Avoid_: Quote, final cost
+
 **Current Asset**:
 The active Original or Master selected for a Side; older lineages may remain as history but are not current.
 _Avoid_: Latest asset
