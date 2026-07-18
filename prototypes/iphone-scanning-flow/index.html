@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PROTÓTIPO — Auto Scanner</title>
+  <style>
+    :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; --green:#67e8a8; --amber:#ffd166; --ink:#07130e; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; background:#090b0a; color:white; overflow-x:hidden; }
+    button { font:inherit; }
+    .app { min-height:100vh; display:flex; justify-content:center; background:radial-gradient(circle at 50% 20%,#24372d,#080a09 65%); }
+    .phone { width:min(100%,430px); min-height:100vh; position:relative; overflow:hidden; background:#101612; }
+    .camera { position:absolute; inset:0; background:linear-gradient(145deg,#304134,#151b17 55%,#2a211c); }
+    .photo { position:absolute; left:14%; right:14%; top:24%; height:42%; background:linear-gradient(135deg,#e7d5b3,#8a684c); border:8px solid #f2e9da; box-shadow:0 18px 45px #000b; transform:rotate(-1deg); }
+    .photo::after { content:""; position:absolute; inset:16% 20%; border-radius:50% 50% 40% 40%; background:linear-gradient(#806048,#3d2e27); opacity:.65; }
+    .corners { position:absolute; inset:-12px; border:3px solid var(--green); border-radius:7px; box-shadow:0 0 0 999px #0002; transition:.3s; }
+    .top { position:relative; z-index:3; display:flex; align-items:center; justify-content:space-between; padding:18px 18px 10px; background:linear-gradient(#000b,transparent); }
+    .count { font-weight:750; font-size:15px; }
+    .icon-btn { border:0; border-radius:50%; width:42px; height:42px; color:white; background:#0008; }
+    .mode { position:relative; z-index:4; display:flex; gap:5px; margin:4px auto; padding:4px; width:max-content; border-radius:999px; background:#0009; backdrop-filter:blur(12px); }
+    .mode button { border:0; color:#ddd; background:transparent; padding:9px 12px; border-radius:999px; font-size:13px; }
+    .mode button.active { color:var(--ink); background:white; font-weight:700; }
+    .content { position:relative; z-index:3; min-height:calc(100vh - 80px); }
+    .status { font-weight:800; letter-spacing:-.02em; }
+    .sub { color:#d7ddd9; line-height:1.35; }
+    .primary { border:0; color:#07130e; background:var(--green); border-radius:14px; padding:15px 20px; font-weight:800; }
+    .secondary { border:1px solid #ffffff44; color:white; background:#111b; border-radius:14px; padding:14px 18px; }
+    .toggle { display:flex; align-items:center; gap:9px; }
+    .toggle input { width:40px; height:24px; accent-color:#42d38c; }
+    .manual { display:none; border-color:#ffd166aa; color:#fff4c7; }
+    .manual.show { display:block; }
+    .toast { position:absolute; z-index:8; left:22px; right:22px; top:19%; padding:14px; border-radius:16px; color:#07130e; background:#e9fff3; font-weight:750; transform:translateY(-30px); opacity:0; pointer-events:none; transition:.25s; box-shadow:0 10px 35px #0008; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .switcher { position:fixed; z-index:30; left:50%; bottom:max(12px,env(safe-area-inset-bottom)); transform:translateX(-50%); display:flex; align-items:center; gap:10px; border:1px solid #ffffff33; border-radius:999px; padding:7px; background:#050706eb; box-shadow:0 8px 30px #000; backdrop-filter:blur(14px); }
+    .switcher button { width:38px; height:38px; border:0; border-radius:50%; background:#fff; color:#111; font-size:20px; }
+    .switcher span { min-width:150px; text-align:center; font-size:12px; font-weight:700; }
+    .prototype-tag { position:fixed; z-index:31; top:6px; left:8px; color:#ffffff77; font-size:9px; letter-spacing:.1em; }
+    .variant { display:none; }
+    .variant.active { display:block; }
+    /* A — instrução central contextual */
+    .a .hero { position:absolute; left:20px; right:20px; bottom:115px; text-align:center; padding:25px 18px 20px; border-radius:25px; background:#07100de5; backdrop-filter:blur(18px); }
+    .a .status { font-size:30px; margin:0 0 6px; }
+    .a .sub { margin:0 auto 18px; max-width:300px; }
+    .a .progress { display:flex; justify-content:center; gap:7px; margin-bottom:18px; }
+    .a .progress i { width:28px; height:5px; border-radius:9px; background:#ffffff25; }
+    .a .progress i.on { background:var(--green); }
+    .a .actions { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
+    .a .toggle { justify-content:center; margin-top:13px; font-size:13px; }
+    /* B — HUD periférico */
+    .b .reticle-label { position:absolute; top:18%; left:50%; transform:translateX(-50%); padding:8px 13px; border-radius:999px; background:#000a; font-size:13px; font-weight:750; white-space:nowrap; }
+    .b .rail { position:absolute; top:26%; right:12px; display:grid; gap:9px; }
+    .b .gate { width:47px; min-height:47px; border-radius:14px; background:#000a; display:grid; place-items:center; font-size:10px; text-align:center; border:1px solid #ffffff22; }
+    .b .gate.ok { color:var(--green); border-color:#67e8a855; }
+    .b .bottom { position:absolute; left:15px; right:15px; bottom:105px; display:grid; grid-template-columns:1fr auto; gap:10px; align-items:end; }
+    .b .copy { padding:16px; border-radius:18px; background:#000b; backdrop-filter:blur(12px); }
+    .b .status { font-size:20px; margin:0 0 4px; }
+    .b .sub { margin:0; font-size:13px; }
+    .b .round { width:58px; height:58px; padding:0; border-radius:50%; }
+    .b .settings { position:absolute; left:17px; bottom:62px; display:flex; gap:14px; align-items:center; font-size:12px; }
+    /* C — fila explícita */
+    .c { background:linear-gradient(#15201a,#0b0e0c); min-height:100vh; padding:88px 17px 120px; }
+    .c .preview { position:relative; height:43vh; min-height:300px; border-radius:28px; overflow:hidden; background:linear-gradient(145deg,#304134,#151b17 55%,#2a211c); box-shadow:0 15px 50px #0009; }
+    .c .preview .photo { top:20%; height:56%; }
+    .c .card { margin-top:-26px; position:relative; z-index:2; padding:20px; border-radius:25px; background:#f5f4ef; color:#101512; box-shadow:0 15px 45px #0009; }
+    .c .eyebrow { color:#52705f; font-size:11px; font-weight:850; letter-spacing:.09em; text-transform:uppercase; }
+    .c .status { font-size:25px; margin:5px 0; }
+    .c .sub { color:#4d5851; margin:0 0 15px; }
+    .c .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin:13px 0; }
+    .c .steps div { padding:8px 4px; border-radius:9px; background:#e5e8e3; color:#657068; text-align:center; font-size:10px; }
+    .c .steps .on { background:#c8f5dc; color:#123c25; font-weight:750; }
+    .c .actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .c .secondary { color:#27322b; border-color:#bcc4be; background:transparent; }
+    .c .toggle { margin-top:13px; color:#465149; font-size:13px; }
+    @media (min-width:700px) { .phone { min-height:900px; height:900px; margin:25px 0; border-radius:42px; box-shadow:0 0 0 9px #242825,0 30px 90px #000; } .content { min-height:820px; } .switcher { bottom:28px; } }
+  </style>
+</head>
+<body>
+  <div class="prototype-tag">PROTÓTIPO DESCARTÁVEL</div>
+  <main class="app"><section class="phone">
+    <div class="camera"></div><div class="photo"><div class="corners"></div></div>
+    <header class="top"><button class="icon-btn pause">Ⅱ</button><span class="count">12 fotografias</span><button class="icon-btn">•••</button></header>
+    <nav class="mode"><button data-mode="stand" class="active">Com suporte</button><button data-mode="hand">Na mão</button></nav>
+    <div class="toast">✓ Frente capturada <small>som curto · toque háptico</small></div>
+    <div class="content variant a" data-variant="A">
+      <section class="hero"><div class="progress"><i class="on"></i><i></i><i></i></div><h1 class="status">Posicione a frente</h1><p class="sub">As bordas ficam verdes quando a foto estiver pronta. A captura é automática.</p><div class="actions"><button class="primary next">Simular prontidão</button><button class="secondary manual">Capturar mesmo assim</button><button class="secondary fallback">Mostrar fallback</button></div><label class="toggle"><input class="back" type="checkbox"> Capturar verso desta sessão</label></section>
+    </div>
+    <div class="content variant b" data-variant="B">
+      <div class="reticle-label">Aguardando fotografia</div><aside class="rail"><div class="gate ok">bordas<br>✓</div><div class="gate">firme</div><div class="gate">luz</div></aside><section class="bottom"><div class="copy"><h1 class="status">Enquadre e segure</h1><p class="sub">Capturamos assim que estiver nítida.</p></div><button class="primary round next">▶</button><button class="secondary manual">Capturar mesmo assim</button><button class="secondary fallback">Fallback</button></section><div class="settings"><label class="toggle"><input class="back" type="checkbox"> Verso</label><span class="mode-copy">Perfil: suporte</span></div>
+    </div>
+    <div class="content variant c" data-variant="C">
+      <div class="preview"><div class="photo"><div class="corners"></div></div></div><section class="card"><div class="eyebrow">Próxima ação</div><h1 class="status">Coloque a frente</h1><p class="sub">Não precisa tocar. O app captura quando enquadramento, foco e movimento estiverem seguros.</p><div class="steps"><div class="on">1 Frente</div><div>2 Retirar</div><div>3 Próxima</div></div><div class="actions"><button class="primary next">Simular captura</button><button class="secondary manual">Capturar com avisos</button><button class="secondary fallback">Mostrar fallback</button></div><label class="toggle"><input class="back" type="checkbox"> Incluir verso nas próximas fotos</label></section>
+    </div>
+  </section></main>
+  <nav class="switcher"><button id="prev" aria-label="variante anterior">←</button><span id="variant-label"></span><button id="next" aria-label="próxima variante">→</button></nav>
+  <script>
+    // PROTÓTIPO DESCARTÁVEL: três interfaces, estado apenas em memória, sem câmera/persistência.
+    const variants = { A:'Guia central', B:'HUD periférico', C:'Próxima ação' };
+    let variant = new URLSearchParams(location.search).get('variant') || 'A';
+    let step = 0, back = false, mode = 'stand';
+    const states = [
+      ['Posicione a frente','As bordas ficam verdes quando a foto estiver pronta. A captura é automática.'],
+      ['Aguardando qualidade','Mantenha a fotografia inteira no quadro. Reflexo moderado vira aviso, não bloqueio.'],
+      ['Frente confirmada','Retire a fotografia antes de continuar.'],
+      ['Vire para o verso','Retire, vire e recoloque a mesma fotografia.'],
+      ['Posicione o verso','A captura será ligada à frente já confirmada.'],
+      ['Fotografia concluída','Retire-a para liberar a próxima captura.']
+    ];
+    function currentState(){ return states[step]; }
+    function syncUrl(){ const url=new URL(location); url.searchParams.set('variant',variant); history.replaceState({},'',url); }
+    function render(){
+      document.querySelectorAll('.variant').forEach(v=>v.classList.toggle('active',v.dataset.variant===variant));
+      document.getElementById('variant-label').textContent=`${variant} — ${variants[variant]}`;
+      document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+      document.querySelectorAll('.back').forEach(i=>i.checked=back);
+      const [title,copy]=currentState();
+      document.querySelectorAll('.status').forEach(el=>el.textContent=title);
+      document.querySelectorAll('.sub').forEach(el=>el.textContent=copy);
+      document.querySelectorAll('.mode-copy').forEach(el=>el.textContent=`Perfil: ${mode==='stand'?'suporte':'na mão'}`);
+      document.querySelectorAll('.manual').forEach(el=>el.classList.toggle('show',step===1));
+      document.querySelectorAll('.corners').forEach(el=>{el.style.borderColor=step===1?'#ffd166':'#67e8a8';});
+      const cSteps=document.querySelectorAll('.c .steps div'); cSteps.forEach((el,i)=>el.classList.toggle('on',i===Math.min(step,2)));
+      document.querySelector('.b .reticle-label').textContent=title;
+      syncUrl();
+    }
+    function feedback(){
+      const toast=document.querySelector('.toast'); toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1100);
+      if(navigator.vibrate) navigator.vibrate([35,35,55]);
+      try { const ctx=new AudioContext(); const osc=ctx.createOscillator(), gain=ctx.createGain(); osc.frequency.value=740; gain.gain.setValueAtTime(.08,ctx.currentTime); gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.12); osc.connect(gain).connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime+.13); } catch(e) {}
+    }
+    function advance(manual=false){
+      if(step===0){ step=1; setTimeout(()=>{ if(step===1){ step=2; feedback(); render(); } },1200); }
+      else if(step===1){ step=2; feedback(); }
+      else if(step===2){ step=back?3:5; }
+      else if(step===3){ step=4; }
+      else if(step===4){ step=5; feedback(); }
+      else step=0;
+      render();
+    }
+    document.addEventListener('click',e=>{
+      if(e.target.matches('.back')) return;
+      if(e.target.matches('[data-mode]')) mode=e.target.dataset.mode;
+      if(e.target.matches('.next')) advance();
+      if(e.target.matches('.manual')) advance(true);
+      if(e.target.matches('.fallback')) step=1;
+      if(e.target.id==='prev'||e.target.id==='next'){ const keys=Object.keys(variants),i=keys.indexOf(variant); variant=keys[(i+(e.target.id==='next'?1:-1)+keys.length)%keys.length]; }
+      render();
+    });
+    document.addEventListener('change',e=>{ if(e.target.matches('.back')){back=e.target.checked;render();} });
+    document.addEventListener('keydown',e=>{ if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName)||document.activeElement.isContentEditable)return; if(e.key==='ArrowLeft')document.getElementById('prev').click(); if(e.key==='ArrowRight')document.getElementById('next').click(); });
+    render();
+  </script>
+</body>
+</html>
