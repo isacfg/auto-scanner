@@ -16,6 +16,14 @@ The optional reverse side of a Photograph. It belongs to the same Photograph as 
 
 A continuous period in which a user digitizes multiple Photographs on the iPhone. Back Capture is configured for the session and can be changed for a Photograph that has not started capture.
 
+## In-progress Photograph
+
+A Photograph whose Front capture has begun but which has not yet been completed or discarded. Its Back Capture requirement is fixed when Front capture begins.
+
+## Manual Exception Capture
+
+An explicit capture made available after automatic capture has waited too long. It accepts quality warnings but still requires a detectable Photograph, an available camera, and no capture already in progress.
+
 ## Supported Capture
 
 A Capture Session performed with the iPhone stationary in a stand above the Photograph. This is the recommended capture mode.
